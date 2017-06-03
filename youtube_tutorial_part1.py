@@ -24,7 +24,7 @@ youtube_search("spinners", token=token)
 video_dict = {'youID':[], 'title':[], 'pub_date':[]}
 
 def grab_videos(keyword, token=None):
-    res = youtube_search(keyword)
+    res = youtube_search(keyword, token=token)
     token = res[0]
     videos = res[1]
     for vid in videos:
@@ -32,10 +32,13 @@ def grab_videos(keyword, token=None):
         video_dict['title'].append(vid['snippet']['title'])
         video_dict['pub_date'].append(vid['snippet']['publishedAt'])
     print "added " + str(len(videos)) + " videos to a total of " + str(len(video_dict['youID']))
-    while token != "last_page":
-        grab_videos(keyword, token=token)
-
-grab_videos("spinners")
+    return token
 
 
+
+
+
+token = grab_videos("spinners")
+while token != "last_page":
+    token = grab_videos("spinners", token=token)
 
