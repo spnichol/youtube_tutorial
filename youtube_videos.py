@@ -2,14 +2,14 @@ from apiclient.discovery import build
 from apiclient.errors import HttpError
 from oauth2client.tools import argparser
 
-DEVELOPER_KEY = "AIzaSyCT4EuraOI5P-MhirDygPskAWHnMK2GYcM"
+DEVELOPER_KEY = "YOURKEYHERE!"
 YOUTUBE_API_SERVICE_NAME = "youtube"
 YOUTUBE_API_VERSION = "v3"
 
 
 
 
-def youtube_search(q, max_results=50,order="relevance", token=None):
+def youtube_search(q, max_results=50,order="relevance", token=None, location=None, location_radius=None):
 
   youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
     developerKey=DEVELOPER_KEY)
@@ -20,9 +20,17 @@ def youtube_search(q, max_results=50,order="relevance", token=None):
     pageToken=token,
     order = order,
     part="id,snippet",
-    maxResults=max_results
+    maxResults=max_results,
+    location=location,
+    locationRadius=location_radius
+
   ).execute()
 
+  video_response = youtube.videos().list(
+      id=video_ids,
+      part='snippet, recordingDetails, statistics'
+
+  ).execute()
 
 
 
@@ -37,3 +45,18 @@ def youtube_search(q, max_results=50,order="relevance", token=None):
   except Exception as e:
       nexttok = "last_page"
       return(nexttok, videos)
+
+
+def geo_query(video_id):
+    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION,
+                    developerKey=DEVELOPER_KEY)
+
+    video_response = youtube.videos().list(
+        id=video_id,
+        part='snippet, recordingDetails, statistics'
+
+    ).execute()
+
+    return video_response
+
+
