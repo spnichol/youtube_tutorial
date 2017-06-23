@@ -26,12 +26,6 @@ def youtube_search(q, max_results=50,order="relevance", token=None, location=Non
 
   ).execute()
 
-  video_response = youtube.videos().list(
-      id=video_ids,
-      part='snippet, recordingDetails, statistics'
-
-  ).execute()
-
 
 
   videos = []
